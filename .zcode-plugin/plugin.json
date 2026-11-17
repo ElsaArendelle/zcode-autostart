@@ -1,0 +1,59 @@
+{
+  "name": "zcode-autostart",
+  "version": "0.1.7",
+  "description": "Boot-autostart switch for ZCode in plugin settings (HKCU Run key).",
+  "description_i18n": {
+    "en": "Boot-autostart switch for ZCode in plugin settings.",
+    "zh-CN": "在插件设置里提供「开机自启」开关（写 HKCU Run 键），随会话自动生效。"
+  },
+  "author": {
+    "name": "Jhonie·King"
+  },
+  "userConfig": {
+    "enabled": {
+      "title": "开机自启",
+      "description": "开启后 ZCode 随 Windows 登录自动启动（写入 HKCU Run 键）。切换后重开会话自动生效，或在面板里点开关立即生效。",
+      "type": "boolean",
+      "default": true,
+      "required": false
+    },
+    "exePath": {
+      "title": "ZCode 可执行文件路径",
+      "description": "写入启动项的可执行文件路径；默认为本机安装路径，一般无需修改。",
+      "type": "string",
+      "default": "C:\\Program Files\\ZCode\\ZCode.exe",
+      "required": false
+    }
+  },
+  "mcpServers": {
+    "zcode-autostart": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/dist/server.mjs"
+      ],
+      "cwd": "${ZCODE_PROJECT_DIR}",
+      "env": {
+        "AUTOSTART_ENABLED": "${user_config.enabled}",
+        "EXE_PATH": "${user_config.exePath}",
+        "ZCODE_PLUGIN_ID": "zcode-autostart"
+      },
+      "isolation": "workspace"
+    }
+  },
+  "ui": {
+    "surfaces": [
+      {
+        "id": "zcode-autostart",
+        "title": {
+          "en": "Autostart",
+          "zh-CN": "开机自启"
+        },
+        "icon": "power",
+        "server": "zcode-autostart",
+        "resourceUri": "ui://zcode-autostart/panel.html",
+        "availability": "session"
+      }
+    ]
+  }
+}
